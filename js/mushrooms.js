@@ -2,16 +2,16 @@
 
 export const MUSHROOMS = [
   { name: 'Опёнок', r: 16, points: 1, bg: ['#a9d48a', '#6b9f58'], rim: '#4d7a40', cap: ['#e5b56c', '#b67c37'], shape: 'bell', face: 'dot' },
-  { name: 'Лисичка', r: 22, points: 3, bg: ['#fff0b8', '#f2cf6a'], rim: '#c99a2e', cap: ['#ffb02e', '#e47f12'], shape: 'funnel', stem: ['#ffc65a', '#e8922a'], face: 'happy' },
+  { name: 'Зонтик', r: 22, points: 3, bg: ['#ffd75e', '#eeb021'], rim: '#b57f10', cap: ['#fff4dc', '#e4cda4'], shape: 'parasol', stemW: 0.27, ring: true, gloss: 0.5, face: 'happy',
+    scales: [[-0.26, -0.36], [0, -0.32], [0.26, -0.36], [-0.62, -0.06], [-0.32, -0.1], [0, -0.08], [0.32, -0.1], [0.62, -0.06], [-0.42, 0.1], [-0.14, 0.12], [0.14, 0.12], [0.42, 0.1]] },
   { name: 'Маслёнок', r: 29, points: 6, bg: ['#d9c3ea', '#a585bf'], rim: '#755490', cap: ['#8f5a34', '#4f2d18'], shape: 'dome', gloss: 1.5, face: 'dot' },
   { name: 'Сыроежка', r: 36, points: 10, bg: ['#ffe0dc', '#f4aaa8'], rim: '#c96f73', cap: ['#f0536f', '#b9213f'], shape: 'flat', face: 'wink' },
   { name: 'Подберёзовик', r: 44, points: 15, bg: ['#c9eaf2', '#79bdd0'], rim: '#458da3', cap: ['#a9713f', '#6a3f1e'], shape: 'dome', speckles: true, stemW: 0.32, face: 'happy' },
   { name: 'Подосиновик', r: 53, points: 21, bg: ['#ffe6c7', '#f6bd85'], rim: '#c98243', cap: ['#f4662a', '#b93208'], shape: 'dome', speckles: true, stemW: 0.38, face: 'wow' },
   { name: 'Шампиньон', r: 62, points: 28, bg: ['#c5d0f2', '#8294d3'], rim: '#55669f', cap: ['#ffffff', '#d6d2c8'], shape: 'fat', stemW: 0.3, face: 'sleepy' },
   { name: 'Рыжик', r: 72, points: 36, bg: ['#4fae95', '#21695a'], rim: '#154b3f', cap: ['#ff9f43', '#d4620f'], shape: 'flat', rings: true, face: 'dot' },
-  { name: 'Боровик', r: 83, points: 45, bg: ['#f1dfbd', '#cfa871'], rim: '#94703f', cap: ['#8a5228', '#512b10'], shape: 'fat', stemW: 0.46, face: 'happy' },
-  { name: 'Мухомор', r: 95, points: 55, bg: ['#5b8fdc', '#234b93'], rim: '#16336b', cap: ['#ff3f34', '#b70f18'], shape: 'dome', face: 'wink',
-    spots: [[-0.52, -0.2, 0.13], [-0.16, -0.56, 0.15], [0.3, -0.34, 0.14], [0.62, -0.06, 0.1], [-0.2, -0.08, 0.09], [0.12, 0.03, 0.08], [-0.66, 0.02, 0.07]] },
+  { name: 'Польский гриб', r: 83, points: 45, bg: ['#5b8fdc', '#234b93'], rim: '#16336b', cap: ['#7a3f1f', '#3f1c0c'], shape: 'dome', sponge: '#e9d04f', stem: ['#ecd09a', '#bb9259'], stemW: 0.36, face: 'wink' },
+  { name: 'Боровик', r: 95, points: 55, bg: ['#f1dfbd', '#cfa871'], rim: '#94703f', cap: ['#b5763c', '#6e4019'], shape: 'fat', sponge: '#f3e7b8', stemW: 0.46, face: 'happy' },
   { name: 'Царь-гриб', r: 108, points: 66, bg: ['#9a55e0', '#4b1b8a'], rim: '#f4c542', cap: ['#ffe27a', '#e09a12'], shape: 'dome', crown: true, face: 'star' },
 ];
 
@@ -100,6 +100,19 @@ function drawStem(ctx, m) {
     }
   }
   ctx.restore();
+
+  if (m.ring) {
+    ctx.fillStyle = '#d9bf8f';
+    ctx.beginPath();
+    ctx.ellipse(0, 0.33, w + 0.06, 0.05, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  if (m.sponge) {
+    ctx.fillStyle = m.sponge;
+    ctx.beginPath();
+    ctx.ellipse(0, 0.2, 0.78, 0.17, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
 }
 
 function capPath(ctx, shape) {
@@ -119,16 +132,12 @@ function capPath(ctx, shape) {
       ctx.bezierCurveTo(0.5, -0.62, 0.9, -0.42, 0.93, 0.04);
       ctx.quadraticCurveTo(0, 0.42, -0.93, 0.04);
       break;
-    case 'funnel':
-      ctx.moveTo(-0.9, -0.46);
-      ctx.quadraticCurveTo(-0.7, -0.64, -0.5, -0.5);
-      ctx.quadraticCurveTo(-0.3, -0.68, -0.1, -0.52);
-      ctx.quadraticCurveTo(0.1, -0.68, 0.3, -0.52);
-      ctx.quadraticCurveTo(0.5, -0.66, 0.7, -0.5);
-      ctx.quadraticCurveTo(0.82, -0.58, 0.9, -0.46);
-      ctx.bezierCurveTo(0.82, -0.02, 0.46, 0.14, 0.34, 0.36);
-      ctx.lineTo(-0.34, 0.36);
-      ctx.bezierCurveTo(-0.46, 0.14, -0.82, -0.02, -0.9, -0.46);
+    case 'parasol':
+      ctx.moveTo(-0.95, 0.1);
+      ctx.bezierCurveTo(-0.8, -0.2, -0.35, -0.5, -0.14, -0.6);
+      ctx.quadraticCurveTo(0, -0.86, 0.14, -0.6);
+      ctx.bezierCurveTo(0.35, -0.5, 0.8, -0.2, 0.95, 0.1);
+      ctx.quadraticCurveTo(0, 0.3, -0.95, 0.1);
       break;
     case 'fat':
       ctx.moveTo(-0.95, 0.08);
@@ -168,21 +177,14 @@ function drawCap(ctx, m) {
       ctx.stroke();
     }
   }
-  if (m.shape === 'funnel') {
-    ctx.strokeStyle = 'rgba(160,80,0,.55)';
-    ctx.lineWidth = 0.035;
-    for (const x of [-0.56, -0.28, 0, 0.28, 0.56]) {
+  if (m.scales) {
+    ctx.fillStyle = '#8a5a2c';
+    ctx.beginPath();
+    ctx.ellipse(0, -0.64, 0.22, 0.17, 0, 0, Math.PI * 2);
+    ctx.fill();
+    for (const [x, y] of m.scales) {
       ctx.beginPath();
-      ctx.moveTo(x, -0.46);
-      ctx.quadraticCurveTo(x * 0.9, -0.1, x * 0.45, 0.3);
-      ctx.stroke();
-    }
-  }
-  if (m.spots) {
-    ctx.fillStyle = '#fff8ea';
-    for (const [x, y, r] of m.spots) {
-      ctx.beginPath();
-      ctx.ellipse(x, y, r, r * 0.86, 0.3, 0, Math.PI * 2);
+      ctx.ellipse(x, y, 0.075, 0.05, x * 0.8, 0, Math.PI * 2);
       ctx.fill();
     }
   }
