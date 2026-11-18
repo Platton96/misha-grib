@@ -74,7 +74,7 @@ button { cursor: pointer; touch-action: manipulation; }
 }
 .hud__title, .hud__hint, .chain__title { display: none; }
 
-.stat { display: flex; flex-direction: column; min-width: 0; line-height: 1.1; }
+.stat { display: flex; flex: none; flex-direction: column; line-height: 1.1; }
 .stat__label { font-size: 12px; color: var(--muted); }
 .stat__value {
   font-size: 19px;
@@ -82,8 +82,11 @@ button { cursor: pointer; touch-action: manipulation; }
   font-variant-numeric: tabular-nums;
 }
 .stat__value--main { font-size: 26px; color: var(--accent); }
-.stat--next { align-items: center; }
-.next { display: block; width: 36px; height: 36px; }
+.stat--next { flex: none; }
+.next-queue { display: flex; align-items: center; gap: 4px; }
+.next { display: block; flex: none; width: 36px; height: 36px; }
+.next:nth-child(2) { width: 28px; height: 28px; }
+.next:nth-child(3) { width: 22px; height: 22px; }
 
 .hud__buttons { margin-left: auto; display: flex; gap: 6px; }
 .icon-btn {
@@ -171,6 +174,24 @@ button { cursor: pointer; touch-action: manipulation; }
 }
 .chain__item.is-found .chain__name { color: var(--text); }
 
+/* ---------- Узкие телефоны ---------- */
+@media (max-width: 400px) {
+  .hud { gap: 8px; }
+  .hud__buttons { gap: 4px; }
+  .stat__value { font-size: 16px; }
+  .stat__value--main { font-size: 22px; }
+  .next-queue { gap: 3px; }
+  .next { width: 30px; height: 30px; }
+  .next:nth-child(2) { width: 23px; height: 23px; }
+  .next:nth-child(3) { width: 18px; height: 18px; }
+}
+
+@media (max-width: 340px) {
+  .stat__value { font-size: 14px; }
+  .stat__value--main { font-size: 19px; }
+  .icon-btn { width: 38px; height: 38px; }
+}
+
 /* ---------- Раскладка: компьютер и телефон лёжа ---------- */
 @media (min-aspect-ratio: 1/1) and (min-width: 640px) {
   .app {
@@ -202,8 +223,10 @@ button { cursor: pointer; touch-action: manipulation; }
   .stat__label { font-size: 15px; }
   .stat__value { font-size: 26px; }
   .stat__value--main { font-size: 44px; }
-  .stat--next { align-items: flex-start; }
+  .next-queue { gap: 8px; }
   .next { width: 64px; height: 64px; }
+  .next:nth-child(2) { width: 46px; height: 46px; }
+  .next:nth-child(3) { width: 36px; height: 36px; }
   .chain__title { display: block; margin-bottom: 10px; font-size: 18px; }
   .chain__list { grid-template-columns: minmax(0, 1fr); gap: 3px; }
   .chain__item img { width: 42px; flex: none; margin: 0; }

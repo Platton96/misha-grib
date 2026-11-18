@@ -13,6 +13,7 @@ const DROP_COOLDOWN = 420;
 const SETTLE_GRACE = 1300;
 const OVER_AFTER = 2000;
 const SPAWN_LEVELS = 5;
+const QUEUE_SIZE = 3;
 const KING_BONUS = 500;
 const AIM_SPEED = 430;
 
@@ -71,9 +72,9 @@ export class Game {
     this.nextDropAt = 0;
     this.over = false;
     this.held = this.randomLevel();
-    this.next = this.randomLevel();
+    this.queue = Array.from({ length: QUEUE_SIZE }, () => this.randomLevel());
     this.on.score(0);
-    this.on.next(this.next);
+    this.on.next(this.queue);
     this.on.top(0);
   }
 
@@ -239,9 +240,9 @@ export class Game {
     }
 
     if (this.held === null && this.time >= this.nextDropAt) {
-      this.held = this.next;
-      this.next = this.randomLevel();
-      this.on.next(this.next);
+      this.held = this.queue.shift();
+      this.queue.push(this.randomLevel());
+      this.on.next(this.queue);
       if (this.wantDrop) this.drop();
     }
 

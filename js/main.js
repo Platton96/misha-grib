@@ -57,9 +57,12 @@ const game = new Game($('board'), {
       store.set('localStorage', KEYS.best, String(best));
     }
   },
-  next(level) {
-    $('next').src = urls[level];
-    $('next').alt = MUSHROOMS[level].name;
+  next(levels) {
+    levels.forEach((level, i) => {
+      const img = $('nextQueue').children[i];
+      img.src = urls[level];
+      img.alt = MUSHROOMS[level].name;
+    });
   },
   top() {},
   drop() {
