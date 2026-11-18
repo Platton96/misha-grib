@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Миша Гриб</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Собирай одинаковые грибы в лукошке и вырасти Царь-гриб.">
+  <meta name="theme-color" content="#10241b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Миша Гриб">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="assets/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icon-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="app" id="app" inert>
+    <header class="hud">
+      <h1 class="hud__title">Миша Гриб</h1>
+      <div class="stat">
+        <span class="stat__label">Счёт</span>
+        <output class="stat__value stat__value--main" id="score">0</output>
+      </div>
+      <div class="stat">
+        <span class="stat__label">Рекорд</span>
+        <output class="stat__value" id="best">0</output>
+      </div>
+      <div class="stat stat--next">
+        <span class="stat__label">Дальше</span>
+        <img class="next" id="next" alt="" width="40" height="40">
+      </div>
+      <div class="hud__buttons">
+        <button class="icon-btn" id="soundBtn" type="button" aria-label="Выключить звук" aria-pressed="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.6L12 18.5v-13L7.6 9.5H4Z" fill="currentColor"/><path class="sound-on" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="sound-off" d="m16 9.5 5 5m0-5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button class="icon-btn" id="pauseBtn" type="button" aria-label="Пауза">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="5" width="4" height="14" rx="1.4" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1.4" fill="currentColor"/></svg>
+        </button>
+      </div>
+      <p class="hud__hint" id="hint">Веди мышью и кликай, или жми ← → и пробел.</p>
+    </header>
+
+    <section class="stage" id="stage" aria-label="Игровое поле">
+      <div class="basket" id="basket">
+        <canvas id="board"></canvas>
+      </div>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </section>
+
+    <aside class="chain" aria-label="Цепочка грибов">
+      <h2 class="chain__title">Грибная цепочка</h2>
+      <ol class="chain__list" id="chain"></ol>
+    </aside>
+  </main>
+
+  <!-- Экран с паролем -->
+  <div class="overlay overlay--splash" id="splash">
+    <form class="card card--splash" id="loginForm" autocomplete="off" novalidate>
+      <img class="splash__hero" id="splashHero" alt="" width="148" height="148">
+      <h2 class="splash__title">Миша Гриб</h2>
+      <p class="splash__lead">Соединяй одинаковые грибы и вырасти Царь-гриб.</p>
+      <label class="field">
+        <span class="field__label">Пароль</span>
+        <span class="field__row">
+          <input class="field__input" id="password" name="game-code" type="password"
+                 autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false"
+                 enterkeyhint="go" aria-describedby="loginError" required>
+          <button class="field__toggle" id="togglePassword" type="button" aria-label="Показать пароль" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+          </button>
+        </span>
+      </label>
+      <p class="field__error" id="loginError" role="alert"></p>
+      <button class="btn" type="submit">Играть</button>
+    </form>
+  </div>
+
+  <!-- Пауза -->
+  <div class="overlay" id="pauseOverlay" hidden>
+    <div class="card" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+      <h2 class="card__title" id="pauseTitle">Пауза</h2>
+      <button class="btn" id="resumeBtn" type="button">Продолжить</button>
+      <button class="btn btn--ghost" id="restartBtn" type="button">Начать заново</button>
+    </div>
+  </div>
+
+  <!-- Конец игры -->
+  <div class="overlay" id="overOverlay" hidden>
+    <div class="card" role="dialog" aria-modal="true" aria-labelledby="overTitle">
+      <h2 class="card__title" id="overTitle">Лукошко полное</h2>
+      <p class="card__record" id="overRecord" hidden>Новый рекорд!</p>
+      <p class="card__score" id="overScore">0</p>
+      <div class="card__top">
+        <img id="overTopImg" alt="" width="64" height="64">
+        <p>Самый большой гриб:<br><strong id="overTopName"></strong></p>
+      </div>
+      <button class="btn" id="againBtn" type="button">Играть ещё</button>
+    </div>
+  </div>
+
+  <script src="vendor/matter.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
